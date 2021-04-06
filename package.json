@@ -1,0 +1,19 @@
+{
+  "name": "fdk",
+  "version": "0.0.1",
+  "description": "vuepress site to document all the FDK-frontend framework configurations",
+  "main": "index.js",
+  "authors": {
+    "name": "velmurugan Balasubramanian",
+    "email": ""
+  },
+  "repository": "/fdk",
+  "scripts": {
+    "dev": "vuepress dev src",
+    "build": "vuepress build src"
+  },
+  "license": "MIT",
+  "devDependencies": {o
+    "vuepress": "^1.5.3"
+  }
+}
