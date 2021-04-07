@@ -1,32 +1,33 @@
-# Introduction
 
-Freshworks developer platform now supports Vue local development natively in the FDK through webpack. This documentation is intended to walk you through the implemenation in FDK, and the process to be followed to start with the development using Vue.
+## Introduction
+
+Freshworks developer platform now supports Vue local development natively in the FDK through Webpack. This documentation is intended to walk you through the implementation in FDK, and the process to be followed to start with the development using Vue.
 
 ::: tip
-
+FDK supports both Vue version 2 and version 3, make sure you choose the right template while creating a new app.
 :::
 
-## Implementation
+### Implementation
 
-The FDK comes built in with Webpack 5 and a webpack configuration file to mount during the compilation, whenever fdk detects the project is developed with react, the project is compiled using webpack with the default webpack configuration. Though the FDK has built-in webpack configuration, It is possible to provide your own configuration, the guidelines for that is addressed in the later part of this documentation.
+The FDK comes built-in with Webpack 5 and a Webpack configuration file to mount during the compilation, whenever FDK detects the project is developed with Vue, the project is compiled using Webpack with the default Webpack configuration. Though the FDK has a default Webpack configuration for Vue, It is possible to provide your own configuration, the guidelines for that are addressed in the latter part of this documentation.
 
-## Create your first React app
+### Create your first Vue app
 
-To create a new react project,
+To create a new Vue project,
 
 1. Update the FDK to the latest version.
 
-2. Create a new folder named my_app and open terminal/command propmt inside the newly created folder
+2. Create a new folder named my_app and open the terminal/command prompt inside the newly created folder
 
 ```shell
 vel@freshworks:~$ mkdir my_app && cd my_app
 ```
 
-3. Run _fdk create_ and choose the product of your choice.
+3. Run _fdk create_ and select the product of your choice.
 
 ![Choose Product](../assets/choose_prod.png)
 
-4. Once you have choosen the desired product and select your_first_vue_app or your_first_vue3_app template.
+4. Once you have chosen the desired product, select either your_first_vue_app or your_first_vue3_app template,
 
 ![Choose Product](../assets/choose_vue.png)
 
@@ -42,11 +43,10 @@ OR
 vel@freshworks:~/my_app$ npm install
 ```
 
-## Folder Structure
 
 ### Vue app folder structure
 
-The Vue App in the Freshworks ecosystem is similar to the vue app created using vue-cli or a vue app bundled using the webpack, with some minor changes in the folder structure to support integration with the FDK.
+The Vue App in the Freshworks ecosystem is similar to the Vue app created using vue-cli or a Vue app bundled using the Webpack, with some minor changes in the folder structure to support integration with the FDK.
 
 The folder structure of the Vue app is given below
 
@@ -73,15 +73,50 @@ The folder structure of the Vue app is given below
       └── main.js
 ```
 
-## Run the Vue app
+### Run your first Vue app using the FDK
+
+Running a Vue app using FDK is similar to running any other app,
+
+- Open the app folder in terminal and run _fdk run_
+
+  ```shell
+  vel@freshworks:~/my_app$ fdk run
+  ```
+
+- The FDK runs the app with Webpack if `package.json` is present in the root folder of the project with the following object,
+
+  ```json
+    "fdkConfig": {
+      "frontendFramework": "vue",
+      "customConfig": ""
+    }
+  ```
+
+- the `frontendFramework` key in the `fdkConfig` objects denotes the framework of the project, FDK currently supports
+
+  1. React
+  2. Vue
+  3. Vue3
+
+- the `customConfig` key denotes the path of the custom Webpack config you want to provide, although the `customConfig` not mandatory, the FDK will use the default config if any of the following scenarios holds true.
+
+  1. when there is no `customConfig` key in fdkConfig
+  2. when `customConfig` is an empty string
+  3. when the path provided is not a valid path.
+
+::: warning
+The path to the custom Webpack config module should be relative to the app's root folder.
+:::
+
+
 
 ## Usage of existing frontend platform features in Vue
 
-All the frontend features and interfaces should work as it would in the normal frontend app created using vanillaJS or JQuery, Although there few features that had to be implemented in a different way due to the restrictions imposed by Vue.
+All the frontend features and interfaces should work as they would in the normal frontend app created using vanillaJS or JQuery, Although there few features that had to be implemented in a different way due to the restrictions imposed by Vue.
 
 ### Injecting the freshclient.js
 
-The `fresh_client.js` is the interface that bridges your app and the developer platform. The `fresh_client.js` enables you to access the platform features such as request, db, interface and instance through the client object.
+The `fresh_client.js` is the interface that bridges your app and the developer platform. The `fresh_client.js` enables you to access the platform features such as request, db, interface, and instance through the client object.
 
 In the normal vanilla Freshworks application, the `fresh_client.js' is included in the template.html as a script src like shown below
 
@@ -118,44 +153,9 @@ Like in the vanillaJS application, you can include the `fresh_client.js` direclt
 </html>
 ```
 
-### Running your first Vue app using FDK
+### Passing the client Object to the child components.
 
-Running a Vue app using FDK is similar to running any other app,
-
-- Open the app folder in terminal and run _fdk run_
-
-  ```shell
-  vel@freshworks:~/my_app$ fdk run
-  ```
-
-- The FDK runs the app with webpack if `package.json` is present in the root folder of the project with the following object,
-
-  ```json
-    "fdkConfig": {
-      "frontendFramework": "vue",
-      "customConfig": ""
-    }
-  ```
-
-- the `frontendFramework` key in the `fdkConfig` objects denotes the framework of the project, FDK currently supports
-
-  1. React
-  2. Vue
-  3. Vue3
-
-- the `customConfig` key denotes the path of the custom webpack config you want to provide, although this is not mandatory, the FDK will use the default config if any of the following scenarios holds true.
-
-  1. when there is no `customConfig` key in fdkConfig
-  2. when `customConfig` is an empty string
-  3. when the path provided is not a valid path.
-
-::: warning
-The path to the custom webpack config module should be relative to the app's root folder.
-:::
-
-### Passing the client Object to the child compoenents.
-
-Once the `fresh_client.js` is loaded, all the platform features can be accessed in the Vue app through the client object, the client object can then be passed to the child components as a prop like show below
+Once the `fresh_client.js` is loaded, all the platform features can be accessed in the Vue app through the client object, the client object can then be passed down to the child components as a prop like shown below
 
 *App.vue*
 
@@ -169,9 +169,9 @@ Once the `fresh_client.js` is loaded, all the platform features can be accessed 
 
 you can find a sample app that addresses passing down of props to the child component in this [link](#)
 
-## Rendering App in multiple app locations
+### Render App in multiple app locations
 
-One of the most significant feature of the Freshworks developer platform is to render an app in multiple locations, and it can be achieved by defining multiple template `html` files in manifest.json like shown in the example below
+One of the most significant features of the Freshworks developer platform is to render an app in multiple locations, and it can be achieved by defining multiple template `html` files in manifest.json like shown in the example below
 
 _manifest.json_
 
@@ -196,7 +196,7 @@ _manifest.json_
 ```
 
 Since react is a Single Page Application framework it is not possible to define multiple `html` files for a single app
-but you can make use of the instance to acheive the same behaviour and render different React components based on the app location instead of template `html` file
+but you can make use of the instance to achieve the same behavior and render different Vue components based on the app location instead of the template `html` file
 
 _App.vue_
 
@@ -276,8 +276,9 @@ _manifest.json_
 }
 ```
 
-The same
+The logic discussed above can also be applied to interface methods like modals.
+
 
 ::: tip
-All the app locations and interface methods in a Vue app should point to the same template html file, for eg: index.html or the custom html defined by you in the webpack config, though it is possible to use multiple html files and initialize fresh_client.js in all the html files, it is not recommended.
+All the app locations and interface methods in a Vue app should point to the same template html file, for eg: index.html or the custom html defined by you in the Webpack config, though it is possible to use multiple html files and initialize fresh_client.js in all the html files, it is not recommended.
 :::
