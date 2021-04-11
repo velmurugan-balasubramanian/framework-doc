@@ -287,3 +287,145 @@ The logic discussed above can also be applied to interface methods like modals.
 ::: tip
 All the app locations and interface methods in a React app should point to the same template html file, for eg: index.html or the custom html defined by you in the Webpack config, though it is possible to use multiple html files and initialize fresh_client.js in all the html files, it is not recommended.
 :::
+
+## Custom Webpack Config
+
+FDK comes with a provision to provide custom webpack configuration, you can define the custom webpack configuration by providing a path to the configuration on the package.json file of the app.
+
+The path to the configuration is provided in the `configPath` of the `fdkConfig` in package.json
+
+*package.json*
+
+```json
+{
+  "name": "react-webpack-dev",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "fdkConfig":{
+    "frontendFramework": "react", 
+    "configPath": "webpack-config/webpack.config.js" // path to Your Custom Webpack config, under /webpack-config folder
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-spread": "^7.13.0",
+    "@testing-library/jest-dom": "^5.11.6",
+    "html-loader": "^1.3.2",
+    "jest": "^26.6.3",
+    "jest-css-modules": "^2.1.0"
+  },
+  "dependencies": {
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-scripts": "4.0.0"
+  },
+  "scripts": {
+    "test": "jest test --coverage",
+    "code-sanity": ""
+  },
+  "jest": {
+    "roots": [
+      "./app/src"
+    ]
+  }
+}
+```
+
+### Default config
+
+The code snippet shown below is the defalt webpack configuration that comes with the FDK, you can choose to make whatever changes you wish to the configuration, but make sure you follow the guideilnes given below
+
+1. The `output` should always point to or be inside the app directory, so the app can packed properly during *fdk pack* 
+2. If you use any new dependencies in the configuration, make sure you install the dependencies inside the project. 
+
+```js
+'use strict';
+
+const HtmlWebPackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+
+module.exports = {
+  entry: {
+    main: ['@babel/polyfill', `${process.cwd()}/src/index.js`]
+  },
+  output: {
+    globalObject: 'this',
+    path: `${process.cwd()}/app/scripts`,
+    filename: '[name].[contenthash:8].js',
+    chunkFilename: '[name].[contenthash:8].js',
+    publicPath: './scripts'
+  },
+  devtool: 'source-map',
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx|ts|tsx|test.js)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader'
+        }
+      },
+      {
+        test: /\.(css|scss)$/,
+        use: [
+          'style-loader',
+          'css-loader'
+        ]
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name][contenthash:8].[ext]',
+              outputPath: '/assets/img',
+              esModule: false
+            }
+          }
+        ]
+      },
+      {
+        test: /\.html$/,
+        use: [
+          {
+            loader: 'html-loader'
+          }
+        ]
+      }
+    ]
+  },
+  plugins: [
+    new CleanWebpackPlugin({
+      dangerouslyAllowCleanPatternsOutsideProject: true,
+      dry: false
+    }),
+    new MiniCssExtractPlugin({
+      filename: '[name].[contenthash:8].css',
+      chunkFilename: '[name].[contenthash:8].css'
+    }),
+    new HtmlWebPackPlugin({
+      template: `${process.cwd()}/public/index.html`,
+      filename: `${process.cwd()}/app/index.html`
+    })
+  ],
+  optimization: {
+    moduleIds: 'deterministic',
+    runtimeChunk: 'single',
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          priority: -10,
+          chunks: 'all'
+        }
+      }
+    }
+  }
+};
+
+```

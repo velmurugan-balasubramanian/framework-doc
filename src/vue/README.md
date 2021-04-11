@@ -282,3 +282,153 @@ The logic discussed above can also be applied to interface methods like modals.
 ::: tip
 All the app locations and interface methods in a Vue app should point to the same template html file, for eg: index.html or the custom html defined by you in the Webpack config, though it is possible to use multiple html files and initialize fresh_client.js in all the html files, it is not recommended.
 :::
+
+
+## Custom Webpack Config
+
+FDK comes with a provision to provide custom webpack configuration, you can define the custom webpack configuration by providing a path to the configuration on the package.json file of the app.
+
+The path to the configuration is provided in the `configPath` of the `fdkConfig` in package.json
+
+*package.json*
+
+```json
+{
+  "name": "vue-webpack-setup",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "fdkConfig": {
+    "frontendFramework": "vue3",
+    "configPath": "webpack-config/webpack.config.js"    // path to Your Custom Webpack config, 
+  },
+  "scripts": {
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "clean-webpack-plugin": "^3.0.0",
+    "core-js": "^3.9.1",
+    "html-webpack-plugin": "^5.3.1",
+    "mini-css-extract-plugin": "^1.4.0",
+    "vue": "^3.0.0",
+    "vue-loader-3": "npm:vue-loader@^16.1.2",
+    "vue-router": "^4.0.5"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.13.10",
+    "@babel/preset-env": "^7.13.10",
+    "vue-loader": "^16.1.2",
+    "@vue/compiler-sfc": "^3.0.7"
+  },
+  "browserslist": [
+    "Chrome >= 45",
+    "Firefox ESR",
+    "Edge >= 12",
+    "Explorer >= 10",
+    "iOS >= 9",
+    "Safari >= 9",
+    "Android >= 4.4",
+    "Opera >= 30",
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
+
+```
+
+### Default config
+
+The code snippet shown below is the defalt webpack configuration that comes with the FDK, you can choose to make whatever changes you wish to the configuration, but make sure you follow the guideilnes given below
+
+1. The `output` should always point to or be inside the app directory, so the app can packed properly during *fdk pack* 
+2. If you use any new dependencies in the configuration, make sure you install the dependencies inside the project. 
+
+
+```js
+'use strict';
+
+const { VueLoaderPlugin } = require('vue-loader-3');
+const htmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+ 
+module.exports = {
+  entry: {
+    main: ['@babel/polyfill', `${process.cwd()}/src/main.js`]
+  },
+  output: {
+    filename: '[name].[contenthash:8].js',
+    path: `${process.cwd()}/app/scripts`,
+    chunkFilename: '[name].[contenthash:8].js',
+    publicPath: './scripts'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: [
+          /node_modules/,
+          /app/
+        ],
+        use: {
+          loader: 'babel-loader'
+        }
+      },
+      {
+        test: /\.vue$/,
+        loader: 'vue-loader-3'
+      },
+      {
+        test: /\.(css|scss)$/,
+        use: [
+            'style-loader',
+            'css-loader'
+        ]
+    },
+      {
+        test: /\.(eot|ttf|woff|woff2)(\?\S*)?$/,
+        loader: 'file-loader'
+      },
+      {
+        test: /\.(png|jpe?g|gif|webm|mp4|svg)$/,
+        loader: 'file-loader',
+        options: {
+          name: '[name][contenthash:8].[ext]',
+          outputPath: '/assets/img',
+          esModule: false
+        }
+      }
+    ]
+  },
+  plugins: [
+    new VueLoaderPlugin(),
+    new CleanWebpackPlugin(),
+    new MiniCssExtractPlugin({
+      filename: '[name].[contenthash:8].css',
+      chunkFilename: '[name].[contenthash:8].css'
+    }),
+    new htmlWebpackPlugin({
+      template: `${process.cwd()}/public/index.html`,
+      filename: `${process.cwd()}/app/index.html`
+    })
+  ],
+  optimization: {
+    moduleIds: 'deterministic',
+    runtimeChunk: 'single',
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          priority: -10,
+          chunks: 'all'
+        }
+      }
+    }
+  }
+};
+
+```
