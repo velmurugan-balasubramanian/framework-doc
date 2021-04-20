@@ -386,10 +386,11 @@ The path to the configuration is provided in the `configPath` of the `fdkConfig`
 
 ### Default config
 
-The code snippet shown below is the defalt webpack configuration that comes with the FDK, you can choose to make whatever changes you wish to the configuration, but make sure you follow the guideilnes given below
+The code snippet shown below is the default Webpack configuration that comes with the FDK, you can choose to make whatever changes you wish to the configuration, but make sure you follow the guidelines given below
 
-1. The `output` should always point to or be inside the app directory, so the app can packed properly during *fdk pack* 
-2. If you use any new dependencies in the configuration, make sure you install the dependencies inside the project. 
+1. The `output` should always point to or be inside the app directory, so the app can be packed properly during *fdk pack* 
+2. If you use any new dependencies in the configuration, make sure you install the dependencies inside the project root.
+3. Prefix the paths with `${process.cwd()` so fdk can locate the files.
 
 
 ```js
