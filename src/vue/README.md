@@ -1,7 +1,7 @@
 
 ## Introduction
 
-Freshworks developer platform now supports Vue local development natively in the FDK through Webpack. This documentation is intended to walk you through the implementation in FDK, and the process to be followed to start with the development using Vue.
+Freshworks developer platform now supports Vue local development natively in the FDK through [Webpack 5](https://webpack.js.org/blog/2020-10-10-webpack-5-release/). This documentation is intended to walk you through the implementation in the FDK, and the process to follow to get started with the Vue development using the FDK.
 
 ::: tip
 FDK supports both Vue version 2 and version 3, make sure you choose the right template while creating a new app.
@@ -9,9 +9,9 @@ FDK supports both Vue version 2 and version 3, make sure you choose the right te
 
 ### Implementation
 
-The FDK comes built-in with Webpack 5 and a Webpack configuration file to mount during the compilation, whenever FDK detects the project is developed with Vue, the project is compiled using Webpack with the default Webpack configuration. 
+The FDK comes built-in with Webpack 5 and a Webpack configuration file to mount during the compilation and the build phases, whenever the FDK detects the project is developed with Vue, the project is compiled using Webpack with default Webpack configuration.
 
-Though the FDK has a default Webpack configuration for Vue, It is possible to provide your own configuration, the guidelines for that are addressed in the latter part of this documentation.
+Though the FDK has a default Webpack configuration for Vue, It is possible to provide your own configuration, the guidelines to define your own Webpack configurations are addressed in the latter part of this documentation.
 
 ### Create your first Vue app
 
@@ -50,7 +50,7 @@ vel@freshworks:~/my_app$ npm install
 
 The Vue App in the Freshworks ecosystem is similar to the Vue app created using vue-cli or a Vue app bundled using the Webpack, with some minor changes in the folder structure to support integration with the FDK.
 
-The folder structure of the Vue app is given below
+The folder structure of the Vue app is explained below
 
 ```shell
   ├── app
@@ -75,17 +75,56 @@ The folder structure of the Vue app is given below
       └── main.js
 ```
 
+
+#### The manifest.json file
+
+The `manifest.json` file contains the app metadata about your app, such as app locations, platform version, and other app related information.
+
+#### The package.json file
+
+The `package.json` file contains the information about the framework used and the dependencies and devDependencies used by the and configurations if any.
+
+#### The app folder
+
+The `app` folder contains the built/compiled app and the content of the app folder is served by the FDK in `http://localhost:10001/iframe` during *`fdk run`*
+
+::: warning
+
+* Do not delete, replace or modify the `index.html` file inside the app folder, any changes made will be overwritten during the build. If you need to add or remove anything in the `app/index.html`, make sure you do it in `public/index.html` as it serves as the template file for `app/index.html`
+
+* Replace the `icon.svg` file in the app folder, if you choose to use a custom icon for the app. Make sure you change the name of the icon in `manifest.json` to the replaced/newly added image.
+
+* If you choose to use a [custom webpack config](/react/#custom-webpack-config), make sure the output always points to the app folder or it's subfolders.  
+:::
+
+#### The Config folder
+
+The `config` folder contains the installation parameter of the app.
+
+::: danger
+
+* Do not define your [custom webpack config](/react/#custom-webpack-config) inside the `config` folder
+:::
+
+#### The src folder
+
+The `src` folder contains your Vue components and services.
+
+#### The public folder
+
+The `public` folder contains an `index.html` file which serves as a template to the `app/index.html`. Adding css or script to the app can be done in the `public/index.html`.
+
 ### Run your first Vue app using the FDK
 
 Running a Vue app using FDK is similar to running any other app,
 
-- Open the app folder in terminal and run _fdk run_
+* Open the app folder in terminal and run _fdk run_
 
   ```shell
   vel@freshworks:~/my_app$ fdk run
   ```
 
-- The FDK runs the app with Webpack if `package.json` is present in the root folder of the project with the following object,
+* The FDK runs the app with Webpack if `package.json` is present in the root folder of the project with the following object,
 
   ```json
     "fdkConfig": {
@@ -94,13 +133,13 @@ Running a Vue app using FDK is similar to running any other app,
     }
   ```
 
-- the `frontendFramework` key in the `fdkConfig` objects denotes the framework of the project, FDK currently supports
+* the `frontendFramework` key in the `fdkConfig` objects denotes the framework of the project, FDK currently supports
 
   1. React
   2. Vue
   3. Vue3
 
-- the `customConfig` key denotes the path of the custom Webpack config you want to provide, although the `customConfig` not mandatory, the FDK will use the default config if any of the following scenarios holds true.
+* the `customConfig` key denotes the path of the custom Webpack config you want to provide, although the `customConfig` not mandatory, the FDK will use the default config if any of the following scenarios holds true.
 
   1. when there is no `customConfig` key in fdkConfig
   2. when `customConfig` is an empty string
@@ -110,11 +149,11 @@ Running a Vue app using FDK is similar to running any other app,
 The path to the custom Webpack config module should be relative to the app's root folder.
 :::
 
+### Lifecycle of a FDK Vue App
 
 Lifecycle/App execution flow of a Vue app in FDK is shown in the image below. 
 
 ![Vue Flowchart](../assets/spa.png)
-
 
 ## Usage of existing frontend platform features in Vue
 
@@ -179,7 +218,7 @@ you can find a sample app that addresses passing down of props to the child comp
 
 One of the most significant features of the Freshworks developer platform is to render an app in multiple locations, and it can be achieved by defining multiple template `html` files in manifest.json like shown in the example below
 
-_manifest.json_
+*manifest.json*
 
 ```json
 {
@@ -204,7 +243,7 @@ _manifest.json_
 Since react is a Single Page Application framework it is not possible to define multiple `html` files for a single app
 but you can make use of the instance to achieve the same behavior and render different Vue components based on the app location instead of the template `html` file
 
-_App.vue_
+*App.vue*
 
 ```js
 
@@ -244,7 +283,7 @@ export default {
     get() {
       app.initialized().then((client) => {
         this.client = client;
-        client.instance.context().then(function (data) {
+        client.instance.context().then((data) => {
            this.location = data.location;
 			});
       });
@@ -260,7 +299,7 @@ export default {
 
 ```
 
-_manifest.json_
+*manifest.json*
 
 ```json
 {
@@ -404,6 +443,97 @@ module.exports = {
         options: {
           name: '[name][contenthash:8].[ext]',
           outputPath: '/assets/img',
+          esModule: false
+        }
+      }
+    ]
+  },
+  plugins: [
+    new VueLoaderPlugin(),
+    new CleanWebpackPlugin(),
+    new MiniCssExtractPlugin({
+      filename: '[name].[contenthash:8].css',
+      chunkFilename: '[name].[contenthash:8].css'
+    }),
+    new htmlWebpackPlugin({
+      template: `${process.cwd()}/public/index.html`,
+      filename: `${process.cwd()}/app/index.html`
+    })
+  ],
+  optimization: {
+    moduleIds: 'deterministic',
+    runtimeChunk: 'single',
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          priority: -10,
+          chunks: 'all'
+        }
+      }
+    }
+  }
+};
+
+```
+
+
+### Sample Custom config
+
+A sample custom config to place the built javascript assets inside `js` folder instead of the default `scripts` folder.
+
+```js
+'use strict';
+
+const { VueLoaderPlugin } = require('vue-loader-3');
+const htmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+ 
+module.exports = {
+  entry: {
+    main: ['@babel/polyfill', `${process.cwd()}/src/main.js`]
+  },
+  output: {
+    filename: '[name].[contenthash:8].js',
+    path: `${process.cwd()}/app/scripts`,
+    chunkFilename: '[name].[contenthash:8].js',
+    publicPath: './js'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: [
+          /node_modules/,
+          /app/
+        ],
+        use: {
+          loader: 'babel-loader'
+        }
+      },
+      {
+        test: /\.vue$/,
+        loader: 'vue-loader-3'
+      },
+      {
+        test: /\.(css|scss)$/,
+        use: [
+            'style-loader',
+            'css-loader'
+        ]
+    },
+      {
+        test: /\.(eot|ttf|woff|woff2)(\?\S*)?$/,
+        loader: 'file-loader'
+      },
+      {
+        test: /\.(png|jpe?g|gif|webm|mp4|svg)$/,
+        loader: 'file-loader',
+        options: {
+          name: '[name][contenthash:8].[ext]',
+          outputPath: '/assets/images',
           esModule: false
         }
       }

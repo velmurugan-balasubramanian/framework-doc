@@ -60,9 +60,9 @@ module.exports = {
       ],
       '/react/':[
         {
-          title: 'react',
+          title: 'React',
           collapsable: false,
-          sidebarDepth: 2,
+          sidebarDepth: 4,
           children: [
             ''
           ]
@@ -70,7 +70,7 @@ module.exports = {
       ],
       '/vue/':[
         {
-          title: 'vue',
+          title: 'Vue',
           collapsable: false,
           sidebarDepth: 2,
           children: [

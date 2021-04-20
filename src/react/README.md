@@ -1,13 +1,13 @@
 
 
 ##  Introduction
-Freshworks developer platform now supports React local development natively in the FDK through Webpack. This documentation is intended to walk you through the implementation in FDK, and the process to be followed to start with the development using React.
+Freshworks developer platform now supports React local development natively in the FDK through [Webpack 5](https://webpack.js.org/blog/2020-10-10-webpack-5-release/). This documentation is intended to walk you through the implementation in the FDK, and the process to follow to get started with the React development using the FDK.
 
 ### Implementation
 
-The FDK comes built-in with Webpack 5 and a Webpack configuration file to mount during the compilation, whenever FDK detects the project is developed with React, the project is compiled using Webpack with the default Webpack configuration. 
+The FDK comes built-in with Webpack 5 and a Webpack configuration file to mount during the compilation and the build phases, whenever the FDK detects the project is developed with React, the project is compiled using the Webpack with default Webpack configuration.
 
-Though the FDK has a default Webpack configuration for React apps, It is possible to provide your own configuration, the guidelines for that are addressed in the latter part of this documentation.
+Though the FDK has a default Webpack configuration for React apps, It is possible to provide your custom configurations, the guidelines to define [custom Webpack configurations](/react/#custom-webpack-config) are addressed in the latter part of this documentation.
 ### Create your first React app
 
 To create a new React project,
@@ -39,37 +39,98 @@ vel@freshworks:~/my_app$ npm install
 
 The React App in the Freshworks ecosystem is similar to the React app created using create-react-app or a React app bundled using the Webpack, with some minor changes in the folder structure to support integration with the FDK.
 
-The folder structure of the React app is given below
+The folder structure of the React app is explained below
 
 ```shell
   ├── __mocks__
   │   └── svgrMock.js
-  ├── app                               -> app folder houses built assets
+  ├── app                               
   │   ├── icon.svg
-  │   └── index.html                    -> Template for the frontend app to render
+  │   └── index.html                   
   ├── config
   │   └── iparams.json
-  ├── jest.config.js                    -> unit test configuration for react components
+  ├── jest.config.js                    
   ├── manifest.json
-  ├── package.json                      -> package.json for react app
+  ├── package.json                      
   ├── public
-  │   └── index.html                    -> React template file
+  │   └── index.html                   
   ├── setUpTests.js
-  └── src                               -> React source code
+  └── src                               
       ├── App.css
       ├── App.js
       ├── App.test.js
       ├── assets
       │   ├── icon.svg
       │   └── logo.svg
-      ├── components                    -> React components
+      ├── components                   
       │   └── HelloUser.js
       ├── hooks
       │   └── useScript.js
       ├── index.css
-      ├── index.js                      -> React entry point.
+      ├── index.js              
       └── logo.svg
 ```
+
+#### The manifest.json file
+
+The `manifest.json` file contains the app metadata about your app, such as app locations, platform version, and other app related information
+#### The package.json file
+
+The `package.json` file contains the information about the framework used and the dependencies and devDependencies used by the and configurations if any. 
+
+#### The app folder
+The `app` folder contains the built/compiled app and the content of the app folder is served by the FDK in `http://localhost:10001/iframe` during *`fdk run`*
+
+::: warning
+
+* Do not delete, replace or modify the `index.html` file inside the app folder, any changes made will be overwritten during the build. If you need to add or remove anything in the `app/index.html`, make sure you do it in `public/index.html` as it serves as the template file for `app/index.html`
+
+* Replace the `icon.svg` file in the app folder, if you choose to use a custom icon for the app. Make sure you change the name of the icon in `manifest.json` to the replaced/newly added image.
+
+* If you choose to use a [custom webpack config](/react/#custom-webpack-config), make sure the output always points to the app folder or it's subfolders.  
+:::
+
+#### The Config folder
+The `config` folder contains the installation parameter of the app.
+
+::: danger
+
+* Do not define your [custom webpack config](/react/#custom-webpack-config) inside the `config` folder
+:::
+
+#### The src folder 
+
+The `src` folder contains your react components and services.
+#### The public folder
+
+The `public` folder contains an `index.html` file which serves as a template to the `app/index.html`. Adding css or script to the app can be done in the `public/index.html`. 
+#### The jest.config.js file
+
+The jest.config.js contains the configurations related to jest unit tests. Alternatively, this can be direclty defined in the `package.json` like shown below.
+
+*package.json*
+```json 
+  "scripts": {
+    "test": "jest test --coverage"
+  },
+  "jest": {
+    "roots": [
+      "./app/src"
+    ]
+  }
+```
+
+#### The setUpTests.js file
+
+The `setupTests.js` is needed when your app uses a browser API that you need to mock in your tests or if you need a global setup before running your tests, It will be automatically executed before running your tests.
+
+To know more about `setupTests.js`, please visit [this](https://create-react-app.dev/docs/running-tests/#initializing-test-environment) link
+
+#### The `__mocks__` folder
+
+The `__mocks__` folder contains all the manual mocks required by jest as per jest's naming convention.
+
+Please visit [this](https://jestjs.io/docs/manual-mocks) link to know more about `__mocks__`
 
 ### Run your first React app using the FDK
 
@@ -106,6 +167,7 @@ Running a React app locally using the FDK is similar to running any other app,
 The path to the custom Webpack config module should be relative to the app's root folder.
 :::
 
+### Lifecycle of a FDK React App
 
 Lifecycle/App execution flow of a React app in FDK is shown in the image below. 
 
@@ -387,6 +449,102 @@ module.exports = {
             options: {
               name: '[name][contenthash:8].[ext]',
               outputPath: '/assets/img',
+              esModule: false
+            }
+          }
+        ]
+      },
+      {
+        test: /\.html$/,
+        use: [
+          {
+            loader: 'html-loader'
+          }
+        ]
+      }
+    ]
+  },
+  plugins: [
+    new CleanWebpackPlugin({
+      dangerouslyAllowCleanPatternsOutsideProject: true,
+      dry: false
+    }),
+    new MiniCssExtractPlugin({
+      filename: '[name].[contenthash:8].css',
+      chunkFilename: '[name].[contenthash:8].css'
+    }),
+    new HtmlWebPackPlugin({
+      template: `${process.cwd()}/public/index.html`,
+      filename: `${process.cwd()}/app/index.html`
+    })
+  ],
+  optimization: {
+    moduleIds: 'deterministic',
+    runtimeChunk: 'single',
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          priority: -10,
+          chunks: 'all'
+        }
+      }
+    }
+  }
+};
+
+```
+
+
+### Sample Custom config
+
+A sample custom config to place the built javascript assets inside `js` folder instead of the default `scripts` folder
+
+```js
+'use strict';
+
+const HtmlWebPackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+
+module.exports = {
+  entry: {
+    main: ['@babel/polyfill', `${process.cwd()}/src/index.js`]
+  },
+  output: {
+    globalObject: 'this',
+    path: `${process.cwd()}/app/scripts`,
+    filename: '[name].[contenthash:8].js',
+    chunkFilename: '[name].[contenthash:8].js',
+    publicPath: './js'
+  },
+  devtool: 'source-map',
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx|ts|tsx|test.js)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader'
+        }
+      },
+      {
+        test: /\.(css|scss)$/,
+        use: [
+          'style-loader',
+          'css-loader'
+        ]
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name][contenthash:8].[ext]',
+              outputPath: '/assets/images',
               esModule: false
             }
           }
