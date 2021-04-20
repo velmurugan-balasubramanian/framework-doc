@@ -5,8 +5,9 @@ Freshworks developer platform now supports React local development natively in t
 
 ### Implementation
 
-The FDK comes built-in with Webpack 5 and a Webpack configuration file to mount during the compilation, whenever FDK detects the project is developed with React, the project is compiled using Webpack with the default Webpack configuration. Though the FDK has a default Webpack configuration for React apps, It is possible to provide your own configuration, the guidelines for that are addressed in the latter part of this documentation.
+The FDK comes built-in with Webpack 5 and a Webpack configuration file to mount during the compilation, whenever FDK detects the project is developed with React, the project is compiled using Webpack with the default Webpack configuration. 
 
+Though the FDK has a default Webpack configuration for React apps, It is possible to provide your own configuration, the guidelines for that are addressed in the latter part of this documentation.
 ### Create your first React app
 
 To create a new React project,
@@ -106,6 +107,9 @@ The path to the custom Webpack config module should be relative to the app's roo
 :::
 
 
+Lifecycle/App execution flow of a React app in FDK is shown in the image below. 
+
+![React Flowchart](../assets/spa.png)
 
 ## Usage of existing frontend platform features in React
 

@@ -9,7 +9,9 @@ FDK supports both Vue version 2 and version 3, make sure you choose the right te
 
 ### Implementation
 
-The FDK comes built-in with Webpack 5 and a Webpack configuration file to mount during the compilation, whenever FDK detects the project is developed with Vue, the project is compiled using Webpack with the default Webpack configuration. Though the FDK has a default Webpack configuration for Vue, It is possible to provide your own configuration, the guidelines for that are addressed in the latter part of this documentation.
+The FDK comes built-in with Webpack 5 and a Webpack configuration file to mount during the compilation, whenever FDK detects the project is developed with Vue, the project is compiled using Webpack with the default Webpack configuration. 
+
+Though the FDK has a default Webpack configuration for Vue, It is possible to provide your own configuration, the guidelines for that are addressed in the latter part of this documentation.
 
 ### Create your first Vue app
 
@@ -108,6 +110,10 @@ Running a Vue app using FDK is similar to running any other app,
 The path to the custom Webpack config module should be relative to the app's root folder.
 :::
 
+
+Lifecycle/App execution flow of a Vue app in FDK is shown in the image below. 
+
+![Vue Flowchart](../assets/spa.png)
 
 
 ## Usage of existing frontend platform features in Vue
