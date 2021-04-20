@@ -7,7 +7,8 @@ Freshworks developer platform now supports React local development natively in t
 
 The FDK comes built-in with Webpack 5 and a Webpack configuration file to mount during the compilation and the build phases, whenever the FDK detects the project is developed with React, the project is compiled using the Webpack with default Webpack configuration.
 
-Though the FDK has a default Webpack configuration for React apps, It is possible to provide your custom configurations, the guidelines to define [custom Webpack configurations](/react/#custom-webpack-config) are addressed in the latter part of this documentation.
+Though the FDK has a default Webpack configuration for React apps, It is possible to provide custom configurations, the guidelines to define [custom Webpack configurations](/react/#custom-webpack-config) are addressed in the latter part of this documentation.
+
 ### Create your first React app
 
 To create a new React project,
@@ -87,7 +88,7 @@ The `app` folder contains the built/compiled app and the content of the app fold
 
 * Replace the `icon.svg` file in the app folder, if you choose to use a custom icon for the app. Make sure you change the name of the icon in `manifest.json` to the replaced/newly added image.
 
-* If you choose to use a [custom webpack config](/react/#custom-webpack-config), make sure the output always points to the app folder or it's subfolders.  
+* If you choose to use a [custom webpack config](/react/#custom-webpack-config), make sure the output always points to the app folder or its subfolders.  
 :::
 
 #### The Config folder

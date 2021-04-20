@@ -11,7 +11,7 @@ FDK supports both Vue version 2 and version 3, make sure you choose the right te
 
 The FDK comes built-in with Webpack 5 and a Webpack configuration file to mount during the compilation and the build phases, whenever the FDK detects the project is developed with Vue, the project is compiled using Webpack with default Webpack configuration.
 
-Though the FDK has a default Webpack configuration for Vue, It is possible to provide your own configuration, the guidelines to define your own Webpack configurations are addressed in the latter part of this documentation.
+Though the FDK has a default Webpack configuration for Vue, It is possible to provide custom configurations, the guidelines to define [custom Webpack configurations](/vue/#custom-webpack-config) are addressed in the latter part of this documentation.
 
 ### Create your first Vue app
 
@@ -94,7 +94,7 @@ The `app` folder contains the built/compiled app and the content of the app fold
 
 * Replace the `icon.svg` file in the app folder, if you choose to use a custom icon for the app. Make sure you change the name of the icon in `manifest.json` to the replaced/newly added image.
 
-* If you choose to use a [custom webpack config](/react/#custom-webpack-config), make sure the output always points to the app folder or it's subfolders.  
+* If you choose to use a [custom webpack config](/react/#custom-webpack-config), make sure the output always points to the app folder or its subfolders.  
 :::
 
 #### The Config folder
