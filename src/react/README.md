@@ -77,10 +77,10 @@ The folder structure of the React app is explained below
 The `manifest.json` file contains the app metadata about your app, such as app locations, platform version, and other app related information
 #### The package.json file
 
-The `package.json` file contains the information about the framework used and the dependencies and devDependencies used by the and configurations if any. 
+The `package.json` file contains the information about the framework used in the app, the dependencies, and devDependencies used by the app, and configurations if any.
 
 #### The app folder
-The `app` folder contains the built/compiled app and the content of the app folder is served by the FDK in `http://localhost:10001/iframe` during *`fdk run`*
+The `app` folder contains the built/compiled assets of the app. The content of the app folder is served by the FDK in `http://localhost:10001/iframe` during *`fdk run`*
 
 ::: warning
 
@@ -88,7 +88,7 @@ The `app` folder contains the built/compiled app and the content of the app fold
 
 * Replace the `icon.svg` file in the app folder, if you choose to use a custom icon for the app. Make sure you change the name of the icon in `manifest.json` to the replaced/newly added image.
 
-* If you choose to use a [custom webpack config](/react/#custom-webpack-config), make sure the output always points to the app folder or its subfolders.  
+* If you choose to use a [custom Webpack config](/react/#custom-webpack-config), make sure the output always points to the app folder or its subfolders.  
 :::
 
 #### The Config folder
@@ -104,10 +104,10 @@ The `config` folder contains the installation parameter of the app.
 The `src` folder contains your react components and services.
 #### The public folder
 
-The `public` folder contains an `index.html` file which serves as a template to the `app/index.html`. Adding css or script to the app can be done in the `public/index.html`. 
+The `public` folder contains an `index.html` file which serves as a template to the `app/index.html`. Adding CSS or script to the app can be done in the `public/index.html`. 
 #### The jest.config.js file
 
-The jest.config.js contains the configurations related to jest unit tests. Alternatively, this can be direclty defined in the `package.json` like shown below.
+The jest.config.js contains the configurations related to jest unit tests. Alternatively, this can be directly defined in the `package.json` like shown below.
 
 *package.json*
 ```json 
@@ -158,31 +158,31 @@ Running a React app locally using the FDK is similar to running any other app,
   2. Vue
   3. Vue3
 
-- The `customConfig` key denotes the path of the custom Webpack config you want to provide, although this is not mandatory, the FDK will use the default config if any of the following scenarios holds true.
+- The `customConfig` key denotes the path of the custom Webpack config you want to provide, although this is not mandatory, the FDK will use the default config if any of the following scenarios hold.
 
   1. when there is no `customConfig` key in fdkConfig
   2. when `customConfig` is an empty string
-  3. when the path provided is not a valid path.
+  3. when the path provided is not valid.
 
 ::: warning
 The path to the custom Webpack config module should be relative to the app's root folder.
 :::
 
-### Lifecycle of a FDK React App
+### Lifecycle of an FDK React App
 
-Lifecycle/App execution flow of a React app in FDK is shown in the image below. 
+The lifecycle/App execution flow of a React app in FDK is shown in the image below. 
 
 ![React Flowchart](../assets/spa.png)
 
 ## Usage of existing frontend platform features in React
 
-All the frontend features and interfaces should work as they would in the normal frontend app created using vanillaJS or JQuery, Although there few features that had to be implemented in a different way due to the restrictions imposed by React.
+All the frontend features and interfaces should work as they would in the normal frontend app created using vanillaJS or JQuery, Although there few features that had to be implemented differently due to the restrictions imposed by React.
 
 ### Injecting the freshclient.js
 
 The `fresh_client.js` is the interface that bridges your app and the developer platform. The `fresh_client.js` enables you to access the platform features such as request, db, interface, and instance through the client object.
 
-In the normal vanilla Freshworks application, the `fresh_client.js' is included in the template.html as a script src like shown below
+In the normal vanilla Freshworks application, the `fresh_client.js' is included in the template.html as script src like shown below
 
 ```html
 <!DOCTYPE html>
@@ -254,7 +254,7 @@ you can find a sample app that addresses passing down of props to the child comp
 
 ### Render App in multiple app locations
 
-One of the most significant features of the Freshworks developer platform is to render an app in multiple locations, and it can be achieved by defining multiple template `html` files in manifest.json like shown in the example below
+One of the most significant features of the Freshworks developer platform is to render an app in multiple locations, and it can be achieved by defining multiple template `HTML` files in manifest.json like shown in the example below
 
 *manifest.json*
 ```json
@@ -277,8 +277,8 @@ One of the most significant features of the Freshworks developer platform is to 
 }
 ```
 
-Since React is a Single Page Application framework it is not possible to define multiple `html` files for a single app
-but you can make use of the instance to achieve the same behavior and render different React components based on the app location instead of template `html` file
+Since React is a Single Page Application framework it is not possible to define multiple `HTML` files for a single app
+but you can make use of the instance to achieve the same behavior and render different React components based on the app location instead of template `HTML` file
 
 
 *App.js*
@@ -352,7 +352,7 @@ The logic discussed above can also be applied to interface methods like modals.
 
 
 ::: tip
-All the app locations and interface methods in a React app should point to the same template html file, for eg: index.html or the custom html defined by you in the Webpack config, though it is possible to use multiple html files and initialize fresh_client.js in all the html files, it is not recommended.
+All the app locations and interface methods in a React app should point to the same template HTML file, for eg: index.html or the custom HTML defined by you in the Webpack config, though it is possible to use multiple HTML files and initialize fresh_client.js in all the HTML files, it is not recommended.
 :::
 
 ## Custom Webpack Config
@@ -403,9 +403,9 @@ The path to the configuration is provided in the `configPath` of the `fdkConfig`
 
 The code snippet shown below is the default webpack configuration that comes with the FDK, you can choose to make whatever changes you wish to the configuration, but make sure you follow the guidelines given below
 
-1. The `output` should always point to or be inside the app directory, so the app can packed properly during *fdk pack* 
+1. The `output` should always point to or be inside the app directory, so the app can be packed properly during *fdk pack* 
 2. If you use any new dependencies in the configuration, make sure you install the dependencies inside the project root.
-3. Prefix the paths with `${process.cwd()` so fdk can locate the files.
+3. Prefix the paths with `${process.cwd()` so the FDK can locate the files inside your app folder
 
 ```js
 'use strict';

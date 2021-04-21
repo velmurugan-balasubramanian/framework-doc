@@ -82,11 +82,11 @@ The `manifest.json` file contains the app metadata about your app, such as app l
 
 #### The package.json file
 
-The `package.json` file contains the information about the framework used and the dependencies and devDependencies used by the and configurations if any.
+The `package.json` file contains the information about the framework used in the app, the dependencies, and devDependencies used by the app, and configurations if any.
 
 #### The app folder
 
-The `app` folder contains the built/compiled app and the content of the app folder is served by the FDK in `http://localhost:10001/iframe` during *`fdk run`*
+The `app` folder contains the built/compiled assets of the app. The content of the app folder is served by the FDK in `http://localhost:10001/iframe` during *`fdk run`*
 
 ::: warning
 
@@ -94,7 +94,7 @@ The `app` folder contains the built/compiled app and the content of the app fold
 
 * Replace the `icon.svg` file in the app folder, if you choose to use a custom icon for the app. Make sure you change the name of the icon in `manifest.json` to the replaced/newly added image.
 
-* If you choose to use a [custom webpack config](/react/#custom-webpack-config), make sure the output always points to the app folder or its subfolders.  
+* If you choose to use a [custom Webpack config](/vue/#custom-webpack-config), make sure the output always points to the app folder or its subfolders.  
 :::
 
 #### The Config folder
@@ -103,7 +103,7 @@ The `config` folder contains the installation parameter of the app.
 
 ::: danger
 
-* Do not define your [custom webpack config](/react/#custom-webpack-config) inside the `config` folder
+* Do not define your [custom webpack config](/vue/#custom-webpack-config) inside the `config` folder
 :::
 
 #### The src folder
@@ -112,7 +112,7 @@ The `src` folder contains your Vue components and services.
 
 #### The public folder
 
-The `public` folder contains an `index.html` file which serves as a template to the `app/index.html`. Adding css or script to the app can be done in the `public/index.html`.
+The `public` folder contains an `index.html` file which serves as a template to the `app/index.html`. Adding CSS or script to the app can be done in the `public/index.html`.
 
 ### Run your first Vue app using the FDK
 
@@ -139,31 +139,31 @@ Running a Vue app using FDK is similar to running any other app,
   2. Vue
   3. Vue3
 
-* the `customConfig` key denotes the path of the custom Webpack config you want to provide, although the `customConfig` not mandatory, the FDK will use the default config if any of the following scenarios holds true.
+* the `customConfig` key denotes the path of the custom Webpack config you want to provide, although the `customConfig` not mandatory, the FDK will use the default config if any of the following scenarios hold.
 
   1. when there is no `customConfig` key in fdkConfig
   2. when `customConfig` is an empty string
-  3. when the path provided is not a valid path.
+  3. when the path provided is not valid.
 
 ::: warning
 The path to the custom Webpack config module should be relative to the app's root folder.
 :::
 
-### Lifecycle of a FDK Vue App
+### Lifecycle of an FDK Vue App
 
-Lifecycle/App execution flow of a Vue app in FDK is shown in the image below. 
+The lifecycle/App execution flow of a Vue app in FDK is shown in the image below. 
 
 ![Vue Flowchart](../assets/spa.png)
 
 ## Usage of existing frontend platform features in Vue
 
-All the frontend features and interfaces should work as they would in the normal frontend app created using vanillaJS or JQuery, Although there few features that had to be implemented in a different way due to the restrictions imposed by Vue.
+All the frontend features and interfaces should work as they would in the normal frontend app created using vanillaJS or JQuery, Although there few features that had to be implemented differently due to the restrictions imposed by Vue.
 
 ### Injecting the freshclient.js
 
 The `fresh_client.js` is the interface that bridges your app and the developer platform. The `fresh_client.js` enables you to access the platform features such as request, db, interface, and instance through the client object.
 
-In the normal vanilla Freshworks application, the `fresh_client.js' is included in the template.html as a script src like shown below
+In the normal vanilla Freshworks application, the `fresh_client.js' is included in the template.html as script src like shown below
 
 ```html
 <!DOCTYPE html>
@@ -180,7 +180,7 @@ In the normal vanilla Freshworks application, the `fresh_client.js' is included 
 </html>
 ```
 
-Like in the vanillaJS application, you can include the `fresh_client.js` direclty in the `public/index.html`.
+Like in the vanillaJS application, you can include the `fresh_client.js` directly in the `public/index.html`.
 
 ```html
 <!DOCTYPE html>
@@ -325,7 +325,7 @@ The logic discussed above can also be applied to interface methods like modals.
 
 
 ::: tip
-All the app locations and interface methods in a Vue app should point to the same template html file, for eg: index.html or the custom html defined by you in the Webpack config, though it is possible to use multiple html files and initialize fresh_client.js in all the html files, it is not recommended.
+All the app locations and interface methods in a Vue app should point to the same template HTML file, for eg: index.html or the custom HTML defined by you in the Webpack config, though it is possible to use multiple HTML files and initialize fresh_client.js in all the HTML files, it is not recommended.
 :::
 
 
@@ -390,7 +390,7 @@ The code snippet shown below is the default Webpack configuration that comes wit
 
 1. The `output` should always point to or be inside the app directory, so the app can be packed properly during *fdk pack* 
 2. If you use any new dependencies in the configuration, make sure you install the dependencies inside the project root.
-3. Prefix the paths with `${process.cwd()` so fdk can locate the files.
+3. Prefix the paths with `${process.cwd()` so the FDK can locate the files inside your app folder
 
 
 ```js
