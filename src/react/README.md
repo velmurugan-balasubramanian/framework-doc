@@ -104,7 +104,7 @@ The `config` folder contains the installation parameter of the app.
 The `src` folder contains your react components and services.
 #### The public folder
 
-The `public` folder contains an `index.html` file which serves as a template to the `app/index.html`. Adding CSS or script to the app can be done in the `public/index.html`. 
+The `public` folder contains an `index.html` file which serves as a template to the `app/index.html`. Adding CSS or scripts to the app can be done in the `public/index.html`. 
 #### The jest.config.js file
 
 The jest.config.js contains the configurations related to jest unit tests. Alternatively, this can be directly defined in the `package.json` like shown below.

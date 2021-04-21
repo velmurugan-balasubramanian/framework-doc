@@ -112,7 +112,7 @@ The `src` folder contains your Vue components and services.
 
 #### The public folder
 
-The `public` folder contains an `index.html` file which serves as a template to the `app/index.html`. Adding CSS or script to the app can be done in the `public/index.html`.
+The `public` folder contains an `index.html` file which serves as a template to the `app/index.html`. Adding CSS or scripts to the app can be done in the `public/index.html`.
 
 ### Run your first Vue app using the FDK
 
